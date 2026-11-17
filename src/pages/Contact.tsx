@@ -1,284 +1,146 @@
+import { ArrowRight, ArrowUpRight, Loader2 } from "lucide-react";
+import Words from "@/components/Words";
+import EnquiryResult, { Honeypot } from "@/components/EnquiryResult";
+import { WhatsAppIcon } from "@/components/WhatsApp";
+import { company, serviceOptions, whatsappLink } from "@/data/site";
+import { useEnquiry } from "@/lib/enquiry";
 
-import { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+export default function Contact() {
+  const { state, submit: send, reset } = useEnquiry("contact");
+  const sending = state.status === "sending";
+  const done = state.status === "sent" || state.status === "fallback";
 
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    service: '',
-    message: ''
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission here
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      service: '',
-      message: ''
-    });
+    send(Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>);
   };
+
+  const tel = (n: string) => `tel:${n.replace(/\s/g, "")}`;
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-yellow-500 to-orange-500 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold text-white mb-6">Contact Us</h1>
-          <p className="text-xl text-yellow-100 max-w-3xl mx-auto">
-            Get in touch with our expert team for all your construction and mining equipment needs
+    <>
+      <section className="relative pt-32 md:pt-40">
+        <div className="wrap">
+          <p data-reveal="up" className="label mb-8 flex items-center gap-3">
+            <span className="h-px w-8 bg-gold" /> Contact
           </p>
+          <h1 data-reveal="words" className="display text-[19vw] md:text-[11rem] lg:text-[13rem]">
+            <Words text="Talk to" /> <Words text="us." className="text-molten" />
+          </h1>
         </div>
       </section>
 
-      {/* Contact Content */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            
-            {/* Contact Information */}
+      <section className="wrap grid gap-16 py-20 md:grid-cols-12 md:py-28">
+        {/* details */}
+        <div className="space-y-12 md:col-span-5">
+          <a href={`mailto:${company.email}`} data-reveal="up" className="group block border-b border-line pb-8">
+            <p className="label mb-3">Email</p>
+            <p className="flex items-center justify-between gap-4 text-2xl transition-colors group-hover:text-gold md:text-3xl">
+              {company.email} <ArrowUpRight className="shrink-0" />
+            </p>
+            <p className="mt-2 text-bone-muted">Projects: {company.projectsEmail}</p>
+          </a>
+
+          <a href={tel(company.phone)} data-reveal="up" className="group block border-b border-line pb-8">
+            <p className="label mb-3">Phone</p>
+            <p className="flex items-center justify-between gap-4 text-2xl transition-colors group-hover:text-gold md:text-3xl">
+              {company.phone} <ArrowUpRight className="shrink-0" />
+            </p>
+            <p className="mt-2 text-bone-muted">Emergency: {company.emergencyPhone}</p>
+          </a>
+
+          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" data-reveal="up" className="group block border-b border-line pb-8">
+            <p className="label mb-3">WhatsApp</p>
+            <p className="flex items-center justify-between gap-4 text-2xl transition-colors group-hover:text-[#25D366] md:text-3xl">
+              <span className="inline-flex items-center gap-3"><WhatsAppIcon className="h-7 w-7" /> Chat with us</span> <ArrowUpRight className="shrink-0" />
+            </p>
+            <p className="mt-2 text-bone-muted">Quickest way to check availability</p>
+          </a>
+
+          <div data-reveal="up" className="grid grid-cols-2 gap-8 border-b border-line pb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Get In Touch</h2>
-              
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-lg mr-4">
-                    <MapPin className="text-white" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Our Location</h3>
-                    <p className="text-gray-600">
-                      Accra, Ghana<br />
-                      Greater Accra Region
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-lg mr-4">
-                    <Phone className="text-white" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-600">
-                      +233 XX XXX XXXX<br />
-                      +233 XX XXX XXXX (Emergency)
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-lg mr-4">
-                    <Mail className="text-white" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">
-                      info@godswaycompany.com<br />
-                      projects@godswaycompany.com
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-lg mr-4">
-                    <Clock className="text-white" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Business Hours</h3>
-                    <p className="text-gray-600">
-                      Monday - Friday: 8:00 AM - 6:00 PM<br />
-                      Saturday: 8:00 AM - 4:00 PM<br />
-                      Sunday: Emergency services only<br />
-                      <span className="text-orange-600 font-semibold">24/7 Emergency Support Available</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Map Placeholder */}
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Find Us</h3>
-                <div className="bg-gray-300 h-64 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="mx-auto text-gray-500 mb-2" size={48} />
-                    <p className="text-gray-600">Interactive Map</p>
-                    <p className="text-sm text-gray-500">Accra, Ghana</p>
-                  </div>
-                </div>
-              </div>
+              <p className="label mb-3">Office</p>
+              <p className="text-lg">{company.city}</p>
+              <p className="text-bone-muted">{company.region}</p>
             </div>
+            <div>
+              <p className="label mb-3">Hours</p>
+              <dl className="space-y-1 text-sm">
+                {company.hours.map(([d, h]) => (
+                  <div key={d} className="flex justify-between gap-3">
+                    <dt className="text-bone-muted">{d}</dt>
+                    <dd>{h}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
 
-            {/* Contact Form */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Send us a Message</h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
+          <div data-reveal="up" className="flex items-center gap-4 rounded-lg border border-gold/30 bg-gold/5 p-5">
+            <span className="relative flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-60" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-gold" />
+            </span>
+            <p className="text-sm"><span className="text-gold">24/7 emergency support.</span> Breakdowns don't wait for office hours, and neither do we.</p>
+          </div>
+        </div>
+
+        {/* form */}
+        <div className="md:col-span-6 md:col-start-7">
+          <div data-reveal="up" className="relative rounded-lg border border-line bg-ink-900 p-6 sm:p-10">
+            {done ? (
+              <EnquiryResult state={state} onReset={reset} />
+            ) : (
+              <form onSubmit={submit} className="relative grid gap-7">
+                <Honeypot />
+                <h2 className="display text-5xl">Send a message</h2>
+                <div className="grid gap-7 sm:grid-cols-2">
+                  <input name="name" required maxLength={120} placeholder="Your name *" className="field" autoComplete="name" />
+                  <input name="company" maxLength={160} placeholder="Company" className="field" autoComplete="organization" />
+                  <input name="email" type="email" required maxLength={200} placeholder="Email *" className="field" autoComplete="email" />
+                  <input name="phone" type="tel" maxLength={40} placeholder="Phone / WhatsApp" className="field" autoComplete="tel" />
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="+233 XX XXX XXXX"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="Your company name"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                    Service Interest
-                  </label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  >
-                    <option value="">Select a service</option>
-                    <option value="machine-rentals">Machine Rentals</option>
-                    <option value="equipment-sales">Equipment Sales</option>
-                    <option value="construction">Construction Services</option>
-                    <option value="mining-support">Mining Support</option>
-                    <option value="consultation">Technical Consultation</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    placeholder="Tell us about your project requirements..."
-                  />
-                </div>
-                
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-md hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 font-semibold flex items-center justify-center"
-                >
-                  Send Message
-                  <Send className="ml-2" size={20} />
+                <select name="service" defaultValue="" className="field appearance-none">
+                  <option value="" className="bg-ink">What's it about?</option>
+                  {serviceOptions.map((s) => (
+                    <option key={s} value={s} className="bg-ink">{s}</option>
+                  ))}
+                </select>
+                <textarea name="message" required rows={5} maxLength={5000} placeholder="Tell us about your project *" className="field resize-none" />
+                {state.status === "invalid" && <p role="alert" className="text-sm text-gold">{state.error}</p>}
+                <button type="submit" disabled={sending} className="btn-gold justify-center py-4 disabled:opacity-70">
+                  {sending ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" /> Sending…
+                    </>
+                  ) : (
+                    <>
+                      Send message <ArrowRight size={16} />
+                    </>
+                  )}
                 </button>
+                <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-sm text-bone-muted hover:text-[#25D366]">
+                  <WhatsAppIcon className="h-4 w-4" /> Prefer WhatsApp? Message us instead
+                </a>
               </form>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Emergency Contact */}
-      <section className="py-12 bg-gradient-to-r from-yellow-500 to-orange-500">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white mb-4">24/7 Emergency Support</h2>
-          <p className="text-xl text-yellow-100 mb-6">
-            Equipment breakdown? Urgent project needs? Our emergency support team is always ready to help.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="tel:+233XXXXXXXXX"
-              className="bg-white text-orange-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 flex items-center justify-center"
-            >
-              <Phone className="mr-2" size={20} />
-              Emergency Hotline
-            </a>
-            <a 
-              href="mailto:emergency@godswaycompany.com"
-              className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-orange-600 transition-all duration-300 flex items-center justify-center"
-            >
-              <Mail className="mr-2" size={20} />
-              Emergency Email
-            </a>
-          </div>
+      {/* map */}
+      <section className="wrap pb-24 md:pb-36">
+        <div data-reveal="img" className="relative aspect-[4/3] overflow-hidden rounded-lg border border-line md:aspect-[21/8]">
+          <iframe
+            title="Godsway location: Accra, Ghana"
+            src="https://maps.google.com/maps?q=Accra%2C%20Ghana&z=12&output=embed"
+            className="h-full w-full [filter:invert(0.92)_hue-rotate(180deg)_saturate(0.4)_sepia(0.35)_brightness(0.9)]"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+          <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-line" />
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </>
   );
-};
-
-export default Contact;
+}
